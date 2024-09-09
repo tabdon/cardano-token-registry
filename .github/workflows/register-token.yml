@@ -96,6 +96,17 @@ jobs:
           # Move the JSON file to the mappings directory
           mv "${subject}.json" mappings/
 
+      - name: Checkout the repository from upstream (parent repo)
+        run: |
+          # Add the upstream repository as a remote
+          git remote add upstream https://github.com/cardano-foundation/cardano-token-registry.git
+          
+          # Fetch the upstream master branch (parent repo master)
+          git fetch upstream master
+          
+          # Create a new branch based on upstream master
+          git checkout -b "register-${{ inputs.token_symbol }}" upstream/master
+
       - name: Install GitHub CLI
         run: |
           sudo apt-get update
@@ -103,8 +114,6 @@ jobs:
       
       - name: Create a new branch
         run: |
-          git fetch origin
-          git checkout -b "register-${{ inputs.token_symbol }}" origin/master
           git config user.name "github-actions"
           git config user.email "actions@github.com"
                     
@@ -112,14 +121,11 @@ jobs:
           git add mappings/"${{ inputs.asset_id }}.json"
           
           # Commit the changes with a dynamic commit message
-          git commit -m "Register ${{ inputs.token_name }}"
-          
-          # Push the changes to the new branch
-          git push origin "register-${{ inputs.token_symbol }}"
+          git commit -m "Register ${{ inputs.token_symbol }}"
 
-      - name: Push changes to new branch
+      - name: Push changes to fork
         run: |
-          # Push the new branch to the remote repository
+          # Push the branch to your fork (not the original repo)
           git push origin "register-${{ inputs.token_symbol }}"
   
       - name: Create Pull Request to Parent Repo
