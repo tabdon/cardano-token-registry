@@ -101,23 +101,28 @@ jobs:
           sudo apt-get update
           sudo apt-get install gh
       
-      - name: Push to the registry
+      - name: Create a new branch
         run: |
+          git fetch origin
+          git checkout -b "register-${{ inputs.token_name }}" origin/master  # Create a new branch from master
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           
+          # Move the JSON file to the mappings directory
+          mv "${subject}.json" mappings/
+          
           # Add the file to Git
-          git add mappings/"${{ inputs.asset_id }}.json"
+          git add mappings/"${subject}.json"
           
           # Commit the changes with a dynamic commit message
           git commit -m "Register ${{ inputs.token_name }}"
           
-          # Push the changes to the current branch (HEAD)
-          git push origin HEAD
-
+          # Push the changes to the new branch
+          git push origin "register-${{ inputs.token_name }}"
+  
       - name: Create Pull Request to Parent Repo
         env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}  # Use your Personal Access Token here if needed
         run: |
           gh pr create \
             --title "Register ${{ inputs.token_name }}" \
@@ -133,5 +138,5 @@ jobs:
                   ## Metadata PRs\n\
                   Please note it may take up to 4 hours for merged changes to take effect on the metadata server.' \
             --base master \
-            --head tabdon:master \
+            --head "register-${{ inputs.token_name }}" \
             --repo cardano-foundation/cardano-token-registry
