@@ -116,6 +116,11 @@ jobs:
           
           # Push the changes to the new branch
           git push origin "register-${{ inputs.token_symbol }}"
+
+      - name: Push changes to new branch
+        run: |
+          # Push the new branch to the remote repository
+          git push origin "register-${{ inputs.token_symbol }}"
   
       - name: Create Pull Request to Parent Repo
         env:
