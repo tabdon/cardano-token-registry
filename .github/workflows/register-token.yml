@@ -107,10 +107,7 @@ jobs:
           git checkout -b "register-${{ inputs.token_symbol }}" origin/master
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          
-          # Move the JSON file to the mappings directory
-          mv "${subject}.json" mappings/
-          
+                    
           # Add the file to Git
           git add mappings/"${subject}.json"
           
