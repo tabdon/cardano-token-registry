@@ -9,6 +9,9 @@ on:
       token_symbol:
         description: "The symbol of the token"
         required: true
+      token_decimals:
+        description: "The number of decimals"
+        required: true
       token_description:
         description: "A description of the token"
         required: true
@@ -81,6 +84,7 @@ jobs:
           token-metadata-creator entry $subject \
             --ticker "${{ inputs.token_symbol }}" \
             --url "${{ inputs.token_website_url }}"
+            --decimals "${{ inputs.token_decimals }}"
 
           if [ -f token_logo.png ]; then
             echo "Adding logo"
