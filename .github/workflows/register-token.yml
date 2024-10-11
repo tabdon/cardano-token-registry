@@ -84,8 +84,8 @@ jobs:
           token-metadata-creator entry $subject \
             --ticker "${{ inputs.token_symbol }}" \
             --url "${{ inputs.token_website_url }}" \
-            --decimals $((inputs.token_decimals))
-
+            --decimals ${{ inputs.token_decimals }}
+            
           if [ -f token_logo.png ]; then
             echo "Adding logo"
             token-metadata-creator entry $subject --logo "token_logo.png"
