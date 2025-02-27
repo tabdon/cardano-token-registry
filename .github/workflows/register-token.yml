@@ -27,6 +27,12 @@ on:
       policy_id:
         description: "The policy ID of the token"
         required: true
+      policy_script:
+        description: "The policy script used for minting"
+        required: true
+      signature:
+        description: "The signed proof from the minter's wallet"
+        required: true
 
 permissions:
   contents: write
@@ -64,14 +70,10 @@ jobs:
             exit 1
           fi
 
-          # Convert the image to a base64-encoded bytestring
-          logo_bytestring=$(base64 -w 0 token_logo.png)
-          echo $logo_bytestring > logo_bytestring.txt
-
       - name: Prepare and register token
         run: |
           subject="${{ inputs.asset_id }}"
-          
+
           # Create draft entry
           token-metadata-creator entry --init $subject
 
@@ -79,17 +81,24 @@ jobs:
           token-metadata-creator entry $subject \
             --name "${{ inputs.token_name }}" \
             --description "${{ inputs.token_description }}" \
+            --policy "${{ inputs.policy_id }}"
 
-          # Add optional fields (ticker, url, logo)
+          # Add optional fields (ticker, URL, decimals)
           token-metadata-creator entry $subject \
             --ticker "${{ inputs.token_symbol }}" \
             --url "${{ inputs.token_website_url }}" \
             --decimals ${{ inputs.token_decimals }}
-            
+
           if [ -f token_logo.png ]; then
             echo "Adding logo"
             token-metadata-creator entry $subject --logo "token_logo.png"
           fi
+
+          # Add the policy script and signature
+          echo "${{ inputs.policy_script }}" > policy.json
+          echo "${{ inputs.signature }}" > signature.txt
+          token-metadata-creator entry $subject --policy ./policy.json
+          token-metadata-creator entry $subject --sign ./signature.txt
 
           # Finalize entry
           token-metadata-creator entry $subject --finalize
@@ -102,13 +111,8 @@ jobs:
 
       - name: Checkout the repository from upstream (parent repo)
         run: |
-          # Add the upstream repository as a remote
           git remote add upstream https://github.com/cardano-foundation/cardano-token-registry.git
-          
-          # Fetch the upstream master branch (parent repo master)
           git fetch upstream master
-          
-          # Create a new branch based on upstream master
           git checkout -b "register-${{ inputs.token_symbol }}" upstream/master
 
       - name: Install GitHub CLI
@@ -129,12 +133,11 @@ jobs:
 
       - name: Push changes to fork
         run: |
-          # Push the branch to your fork (not the original repo)
           git push origin "register-${{ inputs.token_symbol }}"
   
       - name: Create Pull Request to Parent Repo
         env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}  # Use your Personal Access Token here if needed
+          GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           gh pr create \
             --title "Register ${{ inputs.token_name }}" \
@@ -146,7 +149,7 @@ jobs:
                   - [x] Metadata related change\n\
                   - [ ] Other\n\n\
                   ## Checklist:\n\
-                  - [x] For metadata related changes, this PR code passes the GitHub Actions metadata validation\n\n\
+                  - [x] For metadata related changes, this PR passes the GitHub Actions metadata validation\n\n\
                   ## Metadata PRs\n\
                   Please note it may take up to 4 hours for merged changes to take effect on the metadata server.' \
             --base master \
