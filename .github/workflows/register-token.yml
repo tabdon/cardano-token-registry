@@ -102,9 +102,19 @@ jobs:
           fi
 
           # Add the policy script and signature
-          cat << 'EOF' > policy.json
-          ${{ inputs.policy_script }}
+          timestamp=$(date +%s)
+          policy_file="policy_${timestamp}.json"
+          
+          cat << 'EOF' > $policy_file
+          {
+            "keyHash": "8200581c7b9a8f64a7cafb12414afb56f3fbfe5fc05ea195339b67a4734dd080",
+            "type": "sig"
+          }
           EOF
+    
+          # Use the unique policy file
+          token-metadata-creator entry $subject --policy ./$policy_file
+
           echo "${{ inputs.signature }}" > signature.txt
           token-metadata-creator entry $subject --policy ./policy.json
           token-metadata-creator entry $subject --sign ./signature.txt
