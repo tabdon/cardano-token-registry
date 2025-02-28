@@ -95,7 +95,7 @@ jobs:
           fi
 
           # Add the policy script and signature
-          echo "${{ inputs.policy_script }}" > policy.json
+          echo '${{ inputs.policy_script }}' > policy.json
           echo "${{ inputs.signature }}" > signature.txt
           token-metadata-creator entry $subject --policy ./policy.json
           token-metadata-creator entry $subject --sign ./signature.txt
