@@ -104,17 +104,7 @@ jobs:
           # Add the policy script and signature
           token-metadata-creator entry $subject --policy "${{ inputs.policy_id }}"
 
-          echo "${{ inputs.signature }}" > signature.txt
-          token-metadata-creator entry $subject --sign ./signature.txt
-
-          # Finalize entry
-          token-metadata-creator entry $subject --finalize
-
-          echo "Listing files after finalizing token metadata:"
-          ls -l
-
-          # Move the JSON file to the mappings directory
-          mv "${subject}.json" mappings/
+          
 
       - name: Checkout the repository from upstream (parent repo)
         run: |
