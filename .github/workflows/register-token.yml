@@ -97,10 +97,10 @@ jobs:
           token-metadata-creator entry --init $subject
 
           # Add required fields
-          # token-metadata-creator entry $subject \
-          #   --name "${{ inputs.token_name }}" \
-          #   --description "${{ inputs.token_description }}" \
-          #   --policy "${{ inputs.policy_id }}"
+          token-metadata-creator entry $subject \
+            --name "${{ inputs.token_name }}" \
+            --description "${{ inputs.token_description }}" \
+            --policy "${{ inputs.policy_id }}"
 
           # Add optional fields (ticker, URL, decimals)
           # token-metadata-creator entry $subject \
