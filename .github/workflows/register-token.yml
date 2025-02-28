@@ -94,24 +94,24 @@ jobs:
           subject="${{ inputs.asset_id }}"
 
           # Create draft entry
-          token-metadata-creator entry --init $subject
+          # token-metadata-creator entry --init $subject
 
           # Add required fields
-          token-metadata-creator entry $subject \
-            --name "${{ inputs.token_name }}" \
-            --description "${{ inputs.token_description }}" \
-            --policy "${{ inputs.policy_id }}"
+          # token-metadata-creator entry $subject \
+          #   --name "${{ inputs.token_name }}" \
+          #   --description "${{ inputs.token_description }}" \
+          #   --policy "${{ inputs.policy_id }}"
 
           # Add optional fields (ticker, URL, decimals)
-          token-metadata-creator entry $subject \
-            --ticker "${{ inputs.token_symbol }}" \
-            --url "${{ inputs.token_website_url }}" \
-            --decimals ${{ inputs.token_decimals }}
+          # token-metadata-creator entry $subject \
+          #   --ticker "${{ inputs.token_symbol }}" \
+          #   --url "${{ inputs.token_website_url }}" \
+          #   --decimals ${{ inputs.token_decimals }}
 
-          if [ -f token_logo.png ]; then
-            echo "Adding logo"
-            token-metadata-creator entry $subject --logo "token_logo.png"
-          fi
+          # if [ -f token_logo.png ]; then
+          #   echo "Adding logo"
+          #   token-metadata-creator entry $subject --logo "token_logo.png"
+          # fi
 
           # Add the policy script and signature
           # token-metadata-creator entry $subject --policy "${{ inputs.policy_id }}"
