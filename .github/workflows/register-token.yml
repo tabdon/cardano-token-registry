@@ -76,6 +76,18 @@ jobs:
           rm -f signature.txt
           rm -f "${{ inputs.asset_id }}.json"
           rm -f "${{ inputs.asset_id }}.json.draft"
+
+      - name: Debug step
+        run: |
+          echo "Contents of new policy file:"
+          cat $policy_file
+          echo "Checking if there are any other policy files:"
+          find . -name "policy*.json" -type f
+          echo "Subject value: $subject"
+          echo "Checking for draft files:"
+          find . -name "*.draft" -type f
+          echo "Contents of draft files:"
+          cat *.draft || echo "No draft files found"
       
       - name: Prepare and register token
         run: |
