@@ -70,6 +70,13 @@ jobs:
             exit 1
           fi
 
+      - name: Clean up previous files
+        run: |
+          rm -f policy.json
+          rm -f signature.txt
+          rm -f "${{ inputs.asset_id }}.json"
+          rm -f "${{ inputs.asset_id }}.json.draft"
+      
       - name: Prepare and register token
         run: |
           subject="${{ inputs.asset_id }}"
