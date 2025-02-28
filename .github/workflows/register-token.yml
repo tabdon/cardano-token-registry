@@ -94,7 +94,7 @@ jobs:
           subject="${{ inputs.asset_id }}"
 
           # Create draft entry
-          # token-metadata-creator entry --init $subject
+          token-metadata-creator entry --init $subject
 
           # Add required fields
           # token-metadata-creator entry $subject \
