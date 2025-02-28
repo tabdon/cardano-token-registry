@@ -102,7 +102,7 @@ jobs:
           fi
 
           # Add the policy script and signature
-          token-metadata-creator entry $subject --policy "${{ inputs.policy_id }}"
+          # token-metadata-creator entry $subject --policy "${{ inputs.policy_id }}"
 
           
 
