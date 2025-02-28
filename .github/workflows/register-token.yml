@@ -116,7 +116,6 @@ jobs:
           token-metadata-creator entry $subject --policy ./$policy_file
 
           echo "${{ inputs.signature }}" > signature.txt
-          token-metadata-creator entry $subject --policy ./policy.json
           token-metadata-creator entry $subject --sign ./signature.txt
 
           # Finalize entry
